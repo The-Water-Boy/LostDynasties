@@ -8,7 +8,7 @@ public class rigidbodyplayermovement : MonoBehaviour
     bool wpressed, apressed, dpressed, spressed, spacepressed;
     public bool movementlock, shiftpressed;
     Transform otherobject;
-    float speed = 50.0f;
+    float speed = 30.0f;
     Rigidbody player;
     int jumpcheck;
     int parkourcounter;
@@ -24,7 +24,6 @@ public class rigidbodyplayermovement : MonoBehaviour
     void Start()
     {
         player = GetComponent<Rigidbody>();
-        player.freezeRotation=true;
         jumpcheck = 0;
         parkourcounter = 0;
     }
@@ -38,8 +37,10 @@ public class rigidbodyplayermovement : MonoBehaviour
         Parkour();
     }
 
-    private void FixedUpdate(){
-        
+    private void FixedUpdate()
+    {
+        this.transform.rotation= Quaternion.Euler(0,orientation.rotation.y*100,0);
+
             if (apressed && movementlock == false)
             {
                 player.AddForce(orientation.right * -1 * speed * Time.fixedDeltaTime, ForceMode.Impulse);
@@ -60,7 +61,7 @@ public class rigidbodyplayermovement : MonoBehaviour
             }
             if (spressed && movementlock == false)
             {
-                player.AddForce(orientation.forward * -1 * speed * Time.fixedDeltaTime, ForceMode.Impulse);
+                player.AddForce(playerparent.forward * -1 * speed * Time.fixedDeltaTime, ForceMode.Impulse);
             }
             if(wpressed && movementlock==true){
                 player.AddForce(Vector3.up * speed * Time.fixedDeltaTime, ForceMode.Impulse);
