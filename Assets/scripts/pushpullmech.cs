@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class pickup : MonoBehaviour
+public class pushpullmech : MonoBehaviour
 {
-    public GameObject playerscript;
+     public GameObject playerscript;
     public Transform body;
     public Transform player;
     int counter;

@@ -5,13 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - pushable
-  - climbable
-  - ground
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - pushable
+  - 
   - Water
   - UI
   - 

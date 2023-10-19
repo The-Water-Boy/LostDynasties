@@ -1,25 +1,79 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
 using UnityEngine;
 
-public class rigidbodyplayermovement : MonoBehaviour
+public class playermovement : MonoBehaviour
 {
     [Header("Movement")]
     bool wpressed, apressed, dpressed, spressed, spacepressed;
     public bool movementlock, shiftpressed;
     Transform otherobject;
-    float speed = 30.0f;
+    float speed = 50.0f;
     Rigidbody player;
     int jumpcheck;
     int parkourcounter;
     public Transform playerparent;
     public Transform playerself;
     float Rotationspeed;
-    public Transform orientation;
+    public Transform Orientation;
     Vector3 moveDirection;
-    
+    private NewPlayerControls newPlayerControls;
+
+    private void Start()
+    {
+        player = GetComponent<Rigidbody>();
+        newPlayerControls = new NewPlayerControls();
+        newPlayerControls.Enable();
+        newPlayerControls.Player.Movement.performed += Movement_performed;
+        newPlayerControls.Player.Jump.performed += Jump_performed;
+    }
+
+    void Update()
+    {  
+        //rotate player
+        moveDirection = playerparent.position - new Vector3(transform.position.x,playerparent.position.y,transform.position.z);
+        Orientation.forward = moveDirection.normalized;
+
+        float horizontalinput = Input.GetAxis("Horizontal");
+        float Verticalinput = Input.GetAxis("Vertical");
+        Vector3 forceDirection = Orientation.forward*Verticalinput + Orientation.right*horizontalinput;
 
 
+    }
+
+    private void FixedUpdate()
+    {
+        //Debug.Log(Orientation.rotation.y);
+        this.transform.rotation = Quaternion.Euler(0,Orientation.rotation.y*100,0);
+        Vector2 inputVector = newPlayerControls.Player.Movement.ReadValue<Vector2>();
+        player.AddForce(new Vector3(inputVector.x,0,inputVector.y) * speed * Time.fixedDeltaTime, ForceMode.Impulse);
+        Vector3 facing = Quaternion.AngleAxis(Orientation.rotation.y*100, Vector3.up)* inputVector;
+    }
+
+    private void Jump_performed(InputAction.CallbackContext context)
+    {
+        if(context.performed && jumpcheck == 0)
+        {
+                player.AddForce(Vector3.up * 30, ForceMode.Impulse);
+                jumpcheck++;
+        }
+    }
+
+    private void Movement_performed(InputAction.CallbackContext context)
+    {
+        //Debug.Log(context);
+        //Debug.Log(context.ReadValue<Vector2>());
+        Vector2 inputVector = context.ReadValue<Vector2>();
+        player.AddForce(new Vector3(inputVector.x,0,inputVector.y)* speed, ForceMode.Force);
+    }
+
+    void OnCollisionEnter(Collision other)
+    {
+        jumpcheck = 0;
+    }
+
+/*
     // Start is called before the first frame update
     void Start()
     {
@@ -132,5 +186,5 @@ public class rigidbodyplayermovement : MonoBehaviour
             transform.Rotate(0f,0f,0f,Space.Self);
         }
     }
-
+*/
 }

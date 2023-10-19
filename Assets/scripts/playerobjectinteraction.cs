@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class playerobjectinteraction : MonoBehaviour
-{
-    public bool epressed = false;
+{ public bool epressed = false;
     bool allowpushing;
 
     // Start is called before the first frame update
