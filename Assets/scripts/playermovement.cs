@@ -6,18 +6,18 @@ using UnityEngine;
 public class playermovement : MonoBehaviour
 {
     [Header("Movement")]
-    bool wpressed, apressed, dpressed, spressed, spacepressed;
-    public bool movementlock, shiftpressed;
-    Transform otherobject;
+    //bool wpressed, apressed, dpressed, spressed, spacepressed;
+    public bool MovementLock, ShiftPressed;
+    //Transform otherobject;
     float speed = 50.0f;
     Rigidbody player;
     int jumpcheck;
-    int parkourcounter;
-    public Transform playerparent;
-    public Transform playerself;
-    float Rotationspeed;
+    //int parkourcounter;
+    //public Transform playerparent;
+    public Transform PlayerGraphics;
+    //float Rotationspeed;
     public Transform Orientation;
-    Vector3 moveDirection;
+    //Vector3 moveDirection;
     private NewPlayerControls newPlayerControls;
 
     private void Start()
@@ -32,23 +32,39 @@ public class playermovement : MonoBehaviour
     void Update()
     {  
         //rotate player
-        moveDirection = playerparent.position - new Vector3(transform.position.x,playerparent.position.y,transform.position.z);
-        Orientation.forward = moveDirection.normalized;
-
-        float horizontalinput = Input.GetAxis("Horizontal");
-        float Verticalinput = Input.GetAxis("Vertical");
-        Vector3 forceDirection = Orientation.forward*Verticalinput + Orientation.right*horizontalinput;
-
-
+        //moveDirection = playerparent.position - new Vector3(transform.position.x,playerparent.position.y,transform.position.z);
+        //Orientation.forward = moveDirection.normalized;
+        //float horizontalinput = Input.GetAxis("Horizontal");
+        //float Verticalinput = Input.GetAxis("Vertical");
+        //Vector3 forceDirection = Orientation.forward*Verticalinput + Orientation.right*horizontalinput;
     }
 
     private void FixedUpdate()
     {
         //Debug.Log(Orientation.rotation.y);
-        this.transform.rotation = Quaternion.Euler(0,Orientation.rotation.y*100,0);
+
+        this.transform.rotation = Quaternion.Euler(0,Orientation.rotation.y*100,0);// sycronises player rotation to the camera so player is always facing forward
+
         Vector2 inputVector = newPlayerControls.Player.Movement.ReadValue<Vector2>();
-        player.AddForce(new Vector3(inputVector.x,0,inputVector.y) * speed * Time.fixedDeltaTime, ForceMode.Impulse);
-        Vector3 facing = Quaternion.AngleAxis(Orientation.rotation.y*100, Vector3.up)* inputVector;
+        
+        if(inputVector.x > 0)
+        {
+            player.AddForce(Orientation.right * speed * Time.fixedDeltaTime, ForceMode.Impulse);
+
+        }else if(inputVector.x < 0)
+        {
+            player.AddForce(Orientation.right *-1* speed * Time.fixedDeltaTime, ForceMode.Impulse);
+        }
+
+        if(inputVector.y > 0)
+        {
+            player.AddForce(Orientation.forward * speed * Time.fixedDeltaTime, ForceMode.Impulse);
+
+        }else if(inputVector.y < 0)
+        {
+            player.AddForce(Orientation.forward *-1* speed * Time.fixedDeltaTime, ForceMode.Impulse);
+        }
+         
     }
 
     private void Jump_performed(InputAction.CallbackContext context)
@@ -62,10 +78,8 @@ public class playermovement : MonoBehaviour
 
     private void Movement_performed(InputAction.CallbackContext context)
     {
-        //Debug.Log(context);
-        //Debug.Log(context.ReadValue<Vector2>());
-        Vector2 inputVector = context.ReadValue<Vector2>();
-        player.AddForce(new Vector3(inputVector.x,0,inputVector.y)* speed, ForceMode.Force);
+        Vector2 inputVector = newPlayerControls.Player.Movement.ReadValue<Vector2>();
+         
     }
 
     void OnCollisionEnter(Collision other)

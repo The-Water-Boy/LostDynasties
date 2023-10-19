@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class playerobjectinteraction : MonoBehaviour
 { public bool epressed = false;
-    bool allowpushing;
+    private bool AllowPushing;
 
     // Start is called before the first frame update
     void Start()
@@ -15,7 +15,7 @@ public class playerobjectinteraction : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(allowpushing==true){
+        if(AllowPushing==true){
             //interactions();
         }
         interactions();
@@ -32,11 +32,11 @@ public class playerobjectinteraction : MonoBehaviour
     void OnCollisionEnter(Collision other){
         if (other.gameObject.tag == "pushable") 
         {
-            allowpushing=true;
+            AllowPushing=true;
         }
     }
 
     void OnCollisionExit(Collision other){
-        allowpushing=false;
+        AllowPushing=false;
     }
 }

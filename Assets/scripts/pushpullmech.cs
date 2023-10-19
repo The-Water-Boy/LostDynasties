@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class pushpullmech : MonoBehaviour
 {
-     public GameObject playerscript;
+    public GameObject PlayerScript;
     public Transform body;
     public Transform player;
     int counter;
@@ -18,12 +18,14 @@ public class pushpullmech : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(playerscript.GetComponent<playerobjectinteraction>().epressed==false){
+        if(PlayerScript.GetComponent<playerobjectinteraction>().epressed==false)
+        {
             body.parent = null;
             counter = 0;
             //print("epressed false");
         }
-        if(playerdetected==true && playerscript.GetComponent<playerobjectinteraction>().epressed == true && counter==0){
+        if(playerdetected==true && PlayerScript.GetComponent<playerobjectinteraction>().epressed == true && counter==0)
+        {
             counter = 1;
             body.parent = player;
             //print("epressed true");
