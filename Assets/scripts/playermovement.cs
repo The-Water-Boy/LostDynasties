@@ -9,7 +9,7 @@ public class playermovement : MonoBehaviour
     //bool wpressed, apressed, dpressed, spressed, spacepressed;
     public bool MovementLock, ShiftPressed;
     //Transform otherobject;
-    float speed = 50.0f;
+    float speed = 90.0f;
     Rigidbody player;
     int jumpcheck;
     //int parkourcounter;
@@ -71,7 +71,7 @@ public class playermovement : MonoBehaviour
     {
         if(context.performed && jumpcheck == 0)
         {
-                player.AddForce(Vector3.up * 30, ForceMode.Impulse);
+                player.AddForce(Vector3.up * 50, ForceMode.Impulse);
                 jumpcheck++;
         }
     }
