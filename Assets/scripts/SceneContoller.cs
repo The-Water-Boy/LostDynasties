@@ -14,4 +14,14 @@ public class SceneContoller : MonoBehaviour
    {
     Application.Quit();
    }
+
+   public void LoadMainMenu()
+   {
+      SceneManager.LoadScene(1);
+   }
+
+   public void RestartLevel()
+   {
+      SceneManager.LoadScene(0);
+   }
 }

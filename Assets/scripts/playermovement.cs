@@ -9,7 +9,7 @@ public class playermovement : MonoBehaviour
     //bool wpressed, apressed, dpressed, spressed, spacepressed;
     public bool MovementLock, ShiftPressed;
     //Transform otherobject;
-    float speed = 90.0f;
+    public float speed = 90.0f;
     Rigidbody player;
     int jumpcheck;
     //int parkourcounter;

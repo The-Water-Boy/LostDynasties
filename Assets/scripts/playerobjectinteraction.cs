@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class playerobjectinteraction : MonoBehaviour
-{ public bool epressed = false;
+{   
+    public bool epressed = false;
     private bool AllowPushing;
+    public int ItemCounter;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        ItemCounter = 0;
     }
 
     // Update is called once per frame
@@ -19,6 +21,9 @@ public class playerobjectinteraction : MonoBehaviour
             //interactions();
         }
         interactions();
+        if(ItemCounter == 4){
+            Debug.Log("win");
+        }
     }
 
     public void interactions(){

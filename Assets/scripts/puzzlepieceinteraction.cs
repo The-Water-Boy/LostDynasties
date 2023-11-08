@@ -18,6 +18,10 @@ public class puzzlepieceinteraction : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
+        if(other.gameObject.tag == "Player")
+        {
+            other.gameObject.GetComponent<playerobjectinteraction>().ItemCounter++;
+        }
         Destroy(gameObject);
     }
 
