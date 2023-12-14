@@ -7,11 +7,12 @@ public class playermovement : MonoBehaviour
 {
     [Header("Movement")]
     //bool wpressed, apressed, dpressed, spressed, spacepressed;
-    public bool MovementLock, ShiftPressed;
+    public bool movementLock, ShiftPressed;
     //Transform otherobject;
     public float speed = 90.0f;
     Rigidbody player;
     int jumpcheck;
+    public float JumpForce = 50.0f;
     //int parkourcounter;
     //public Transform playerparent;
     public Transform PlayerGraphics;
@@ -19,14 +20,18 @@ public class playermovement : MonoBehaviour
     public Transform Orientation;
     //Vector3 moveDirection;
     private NewPlayerControls newPlayerControls;
+    //public Animator NomzamoBody;
+    
 
     private void Start()
     {
+        //NomzamoBody = GetComponent<Animator>();   
         player = GetComponent<Rigidbody>();
         newPlayerControls = new NewPlayerControls();
         newPlayerControls.Enable();
         newPlayerControls.Player.Movement.performed += Movement_performed;
         newPlayerControls.Player.Jump.performed += Jump_performed;
+        //newPlayerControls.Player.Climbing.performed += Climbing_performed;
     }
 
     void Update()
@@ -43,36 +48,83 @@ public class playermovement : MonoBehaviour
     {
         //Debug.Log(Orientation.rotation.y);
 
+        if(Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.A)){
+            speed = 180;
+        }else{speed = 90;}
+
         this.transform.rotation = Quaternion.Euler(0,Orientation.rotation.y*100,0);// sycronises player rotation to the camera so player is always facing forward
+        if(movementLock)
+        {
+            //newPlayerControls.Player.Movement.performed -= Movement_performed;
+            //newPlayerControls.Player.Climbing.performed += Climbing_performed;
+        }
 
         Vector2 inputVector = newPlayerControls.Player.Movement.ReadValue<Vector2>();
         
-        if(inputVector.x > 0)
+        if(inputVector.x > 0 && !movementLock)
         {
             player.AddForce(Orientation.right * speed * Time.fixedDeltaTime, ForceMode.Impulse);
 
-        }else if(inputVector.x < 0)
+        }else if(inputVector.x < 0 && !movementLock)
         {
             player.AddForce(Orientation.right *-1* speed * Time.fixedDeltaTime, ForceMode.Impulse);
         }
 
-        if(inputVector.y > 0)
+        if(inputVector.y > 0 && !movementLock)
         {
             player.AddForce(Orientation.forward * speed * Time.fixedDeltaTime, ForceMode.Impulse);
+            //NomzamoBody.SetBool("walking", true);
+            //NomzamoBody.SetBool("walkbackward", false);
 
-        }else if(inputVector.y < 0)
+        }else if(inputVector.y < 0 && !movementLock)
         {
             player.AddForce(Orientation.forward *-1* speed * Time.fixedDeltaTime, ForceMode.Impulse);
+            //NomzamoBody.SetBool("walkbackward", true);
+            //NomzamoBody.SetBool("walking", false);
         }
+        if(inputVector.y == 0 && !movementLock){
+            //NomzamoBody.SetBool("walkbackward", false);
+            //NomzamoBody.SetBool("walking", false);
+        }
+
+        //climbing sector
+        if(!movementLock)
+        {
+            //newPlayerControls.Player.Climbing.performed -= Climbing_performed;
+            //newPlayerControls.Player.Movement.performed += Movement_performed;
+        }
+
+        Vector3 inputVectorClimbing = newPlayerControls.Player.Climbing.ReadValue<Vector3>();
+        Debug.Log(inputVectorClimbing);
+        if(movementLock){Debug.Log("movementlock true");}
+        if(inputVectorClimbing.x > 0  && movementLock)
+        {
+            player.AddForce(Orientation.right * speed * Time.fixedDeltaTime, ForceMode.Impulse);
+
+        }else if(inputVectorClimbing.x < 0  && movementLock)
+        {
+            player.AddForce(Orientation.right *-1* speed * Time.fixedDeltaTime, ForceMode.Impulse);
+        }
+
+        if(inputVectorClimbing.y > 0  && movementLock)
+        {
+            player.AddForce(Orientation.up * speed * Time.fixedDeltaTime, ForceMode.Impulse);
+
+        }else if(inputVectorClimbing.y < 0  && movementLock)
+        {
+            player.AddForce(Orientation.up*-1* speed * Time.fixedDeltaTime, ForceMode.Impulse);
+        }
+        
          
     }
 
     private void Jump_performed(InputAction.CallbackContext context)
     {
-        if(context.performed && jumpcheck == 0)
+        if(context.performed && jumpcheck >= 0 && jumpcheck <= 1)
         {
-                player.AddForce(Vector3.up * 50, ForceMode.Impulse);
+                player.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
                 jumpcheck++;
+                //NomzamoBody.SetBool("jump", true);
         }
     }
 
@@ -85,6 +137,7 @@ public class playermovement : MonoBehaviour
     void OnCollisionEnter(Collision other)
     {
         jumpcheck = 0;
+        //NomzamoBody.SetBool("jump", false);
     }
 
 /*

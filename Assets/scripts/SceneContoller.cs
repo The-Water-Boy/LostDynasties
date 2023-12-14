@@ -5,6 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class SceneContoller : MonoBehaviour
 {
+
+   void Update()
+   {
+      if(Input.GetKey(KeyCode.R))
+      {
+         RestartLevel();
+      }
+   }
    public void PlayGame()
    {
         SceneManager.LoadScene(0);
@@ -24,4 +32,5 @@ public class SceneContoller : MonoBehaviour
    {
       SceneManager.LoadScene(0);
    }
+
 }
